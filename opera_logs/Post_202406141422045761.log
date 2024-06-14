@@ -1,0 +1,7 @@
+/ Opera-3d Post-Processor
+/ Opera 2020 SP3 [Build 2]
+/ Started: 14/Jun/2024 14:22:04
+/ Node: TUCAN-MAGPC. Processor: Intel64. System: Windows 10
+ACTIVATE FILE='C:\Users\mzhao\OPERA_MSR\pure_perturbation_AC.op3' | LOAD | SELECT ACTION=DEFAULT | SELECT ACTION=SELECT OPTION=SURFACES | THREED OPTION=REFRESH
+
+POINT XP=0 YP=2.75 ZP=0 COMPONENT=Bx

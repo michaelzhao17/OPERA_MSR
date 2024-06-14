@@ -1,0 +1,2 @@
+$python 'import extract_B_at_point as ex'
+$python 'operafea.registerHookCallback('on_timestep_end',ex.onTimeStepEnd)'

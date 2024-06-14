@@ -1,0 +1,60 @@
+/ Opera-3d Modeller
+/ Opera 2020 SP3 [Build 2]
+/ Started: 13/Jun/2024 14:43:15
+/ Node: TUCAN-MAGPC. Processor: Intel64. System: Windows 10
+
+$ COMI 'C:\Users\mzhao\OPERA_MSR\layer_meshing_ver.comi'
+// this script creates model of MSR in OPERA with layered meshing
+// author: M. Zhao
+// June 2024
+$string yesorno YES
+CLEAR REVERT=NO
+THREED XORIGIN=0 YORIGIN=0 ZORIGIN=0 ROTX=0 ROTY=0 ROTZ=0 XASPECT=1 YASPECT=1 ZASPECT=1 SIZE=0 FACETANGLE=5 PERSPECTIVE=YES LINECOLOUR=YES OPTION=SETVIEW
+
+////////////////////////////////////////////////////////////
+/ Constants
+////////////////////////////////////////////////////////////
+//Data Storage Levels
+/ mumetal
+VARIABLE OPTION=PARAMETER, NAME=#mu_DSL, Value=500, DESCRIPTION='data storage level for mumetal'
+/ air (total potential)
+VARIABLE OPTION=PARAMETER, NAME=#air_tot_DSL, Value=200, DESCRIPTION='data storage level for total potential air'
+/ air (reduced potential)
+VARIABLE OPTION=PARAMETER, NAME=#air_red_DSL, Value=100, DESCRIPTION='data storage level for reduced potential air'
+
+/// meshing parameters
+// max element size (MES)
+/ flat mumetal
+VARIABLE OPTION=PARAMETER, NAME=#mu_flat_MES, Value=0.03, DESCRIPTION='maximum element size for flat mumetal'
+/ air (total potential)
+VARIABLE OPTION=PARAMETER, NAME=#air_tot_MES, Value=0.05, DESCRIPTION='maximum element size for total potential air'
+/ air (reduced potential)
+VARIABLE OPTION=PARAMETER, NAME=#air_grad_MES, Value=0.05, DESCRIPTION='maximum element size for air gradient blocks'
+
+// maximum angle between elements (MAbE)
+/ flat mumetal
+VARIABLE OPTION=PARAMETER, NAME=#mu_flat_MAbE, Value=30, DESCRIPTION='maximum angle between elements for flat mumetal'
+/ air
+VARIABLE OPTION=PARAMETER, NAME=#air_grad_MAbE, Value=30, DESCRIPTION='maximum angle between elements for air'
+
+////////////////////////////////////////////////////////////
+/ Modelling
+////////////////////////////////////////////////////////////
+
+//// Layer 5
+
+/// load body step file
+LOAD OPTION=INSERT FILE='stpfiles//layer5_body.STEP'
+
+/ rename
+FILTER TYPE=BODY
+PREVIEW OPTION=PICK | PICK OPTION=ADD PROPERTY=UniqueName LABEL='Unnamed:AAA-001'
+PREVIEW OPTION=ACCEPT REDISPLAY=NO |  RENAME NAME='layer5_body' UNIQUENAME='layer5_body'
+
+/ set material to mumetal
+PREVIEW OPTION=PICK | PICK OPTION=ADD PROPERTY=UniqueName LABEL='layer5_body'
+PREVIEW OPTION=ACCEPT REDISPLAY=NO |  CELLDATA OPTION=MODIFY MATERIALLABEL='layer5' ELEMENTTYPE=Linear LEVEL=#mu_DSL SIZE=#mu_flat_MES NORMALTOL=#mu_flat_MAbE ELEMSHAPEPREF=NONE
+
+// set layering for meshing
+/ front boundary
+FILTER TYPE=FACE
